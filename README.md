@@ -2,32 +2,67 @@
 
 This is a simple mini player which is based on [petite-vue](https://github.com/vuejs/petite-vue)
 
+**NOTE: This project will reconfigure it in 2024. :)**
+
 ## Features
 
-- 18kb size (CSS + JS without petite-vue, gzip: 7.5kb).
+- 24kb size (CSS + JS without petite-vue).
 - Base function with a simple audio list.
 - Can move to page anywhere with mouse grab.
 - Simply operate.
 
 ## Usage
 
-Clone this repository and go to `release` folder, copy `.js` and `.css` file to your website folder.
+Go to [releases](./releases) page to download it.
 
 Use them in your html page:
 
 ```html
 <!-- .css file path -->
-<link rel="stylesheet" href="./player/index.bundle.css">
+<link rel="stylesheet" href="mini-player.css">
 
-<!-- petite-vue CDN -->
+<!-- Petite Vue CDN -->
 <script src="https://unpkg.com/petite-vue"></script>
-<!-- .js file path -->
-<script src="./player/index.bundle.js"></script>
+
+<script type="module">
+  // import js file at here!!
+  import VueMiniPlayerCore from 'mini-player.esm.js'
+
+  const { PlayerCore } = new VueMiniPlayerCore()
+
+  PlayerCore.AppendSong({
+    name: "Libertas",
+    id: "1",
+    src: "./Libertas.mp3"
+  })
+</script>
 ```
 
 Then you can find it appear on your page right bottom corner.
 
 ![](docs/1.jpg)
+
+If you don't want to use cdn file of js you can import the full ver which include full pvue:
+
+```html
+<!-- .css file path -->
+<link rel="stylesheet" href="mini-player.css">
+
+<script type="module">
+  // import js file at here!!
+  import VueMiniPlayerCore from 'mini-player.full.esm.js'
+
+  const { PlayerCore } = new VueMiniPlayerCore()
+
+  PlayerCore.AppendSong({
+    name: "Libertas",
+    id: "1",
+    src: "./Libertas.mp3"
+  })
+</script>
+```
+
+File size will increase ~17kb.
 
 ## Mode explain
 
@@ -52,11 +87,7 @@ Please read [API](#API) part to learn how to operate it.
 
 Update irregularly.
 
-If you want to get all api information, Please go to `src/core/index.ts` to get it.
-
-### Declaration
-
-See details in `src/core/core.d.ts`
+If you want to get all api information, Please go to `src/core/MusicPlayerCore/index.ts` to get it.
 
 #### SingleSongBriefInfo
 
@@ -77,7 +108,7 @@ Base info with a single song.
 ### Get the player core
 
 ```js
-const core = window._PlayerCore
+const { PlayerCore } = new VueMiniPlayerCore()
 ```
 
 ### Add a song
@@ -85,9 +116,9 @@ const core = window._PlayerCore
 This is an example to add a song, it can also append at head!
 
 ```js
-const core = window._PlayerCore
+const { PlayerCore } = new VueMiniPlayerCore()
 
-core.AppendSongOnTail({
+PlayerCore.AppendSongOnTail({
   name: 'Untitled World', 
   id: 2, 
   src: '',  // Your audio.
@@ -101,7 +132,7 @@ In most of situation you can remove by song list button in the player. But also 
 
 ```js
 // remove by api
-core.RemoveSong(0)
+PlayerCore.RemoveSong(0)
 ```
 
 ## License

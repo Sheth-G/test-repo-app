@@ -1,8 +1,9 @@
 import { SingleSongProps } from "./core"
 import { logWarn, throwError } from "./utils"
+import defaultIcon from '../../assets/icon.jpg'
 
-interface MusicPlayerCoreProps {
-
+export interface MusicPlayerCoreProps {
+  defaultIconPath?: string
 }
 
 /**
@@ -25,8 +26,10 @@ class MusicPlayerCore {
   public SongIdMap: { [key: string]: SingleSongProps }
   public PlayMode: PlayModeType
   public IsMute: boolean
+  public defaultIconPath: string
 
   constructor(o?: MusicPlayerCoreProps) {
+    const { defaultIconPath } = o || {}
     this.e = document.createElement('audio')
     this.e.volume = 0.1
     this.SongIdList = []
@@ -35,6 +38,7 @@ class MusicPlayerCore {
     this.CurrentSongId = '?'
     this.IsPlaying = false
     this.IsMute = false
+    this.defaultIconPath = defaultIconPath || defaultIcon
   }
 
   private _AppendSongByIndex(song: SingleSongProps, index: number) {
@@ -210,7 +214,7 @@ class MusicPlayerCore {
 
   /**
    * Play the song.
-   * **Note**: If current song is null, it will begin at head.
+   * **Note**: If current song is null, it will begin at song list head.
    */
   async Play() {
     if (this.e.src.length === 0) {
@@ -225,12 +229,22 @@ class MusicPlayerCore {
     this.IsPlaying = false
   }
 
+  /**
+   * Change the volume of the audio element.
+   *
+   * @param {number} vol - The new volume value. Must be between 0 and 1.
+   */
   ChangeVolume(vol: number) {
     if (vol < 0 && vol <= 1) this.e.volume = 0
     else if (vol > 1) this.e.volume = 1
     else this.e.volume = vol
   }
 
+  /**
+   * Change the current song time.
+   *
+   * @param {number} time - The new time for the current song.
+   */
   ChangeCurrentSongTime(time: number) {
     if (typeof time !== 'number') {
       logWarn('Type of time expect number but got: ' + typeof time)
